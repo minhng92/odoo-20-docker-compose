@@ -2,7 +2,7 @@
 
 Set up **Odoo 20** in a single command using Docker Compose — with support for running multiple Odoo instances on one server.
 
-> **Default master password:** `minhng.info` — change it before going live.
+> **Default master :** `minhng.info` — change it before going live.
 
 ## Quick Start
 
@@ -142,7 +142,7 @@ server {
 </p>
 
 <p align="center">
-<img src="screenshots/odoo-20-dashboard.jpg" alt="Odoo 20 dashboard" width="100%">
+<img src="screenshots/odoo-20-discuss.jpg" alt="Odoo 20 discuss" width="100%">
 </p>
 
 <p align="center">
