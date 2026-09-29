@@ -122,6 +122,23 @@ sudo sysctl -p
 
 Drop your own addons into the **addons/** folder. It's mounted into Odoo as `/mnt/extra-addons`, so they load automatically.
 
+## Loading Enterprise Addons
+
+You can load Odoo enterprise addons into this project like this:
+
+1. Create a new folder named **enterprise** inside **addons**, and put the enterprise addons in **addons/enterprise**.
+2. Append the path to **addons_path** in the config file at **etc/odoo.conf** (the enterprise folder lives under the same mounted **addons/** folder, so use the container path `/mnt/extra-addons/enterprise`).
+3. Restart the Odoo container (or down and up the Odoo container again):
+
+   ``` bash
+   docker-compose restart
+   # or
+   docker-compose down
+   docker-compose up -d
+   ```
+
+Deploy Odoo enterprise with docker-compose in a **separate directory**, without running the Odoo community database(s) there. After deploying the enterprise version, create a **new enterprise database** and import data from the community version (if you have a running community instance).
+
 ## Configuration & Logs
 
 - **Configuration:** edit [`etc/odoo.conf`](etc/odoo.conf)
