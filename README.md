@@ -2,42 +2,68 @@
 
 Set up **Odoo 20** in a single command using Docker Compose — with support for running multiple Odoo instances on one server.
 
-> **Default master :** `minhng.info` — change it before going live.
+> **Default master password:** `minhng.info` — change it before going live.
 
 ## Quick Start
 
-Install [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/) first, then run:
+Install [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/) first, then run the following to set up your first Odoo instance at `localhost:10020`:
 
 ```bash
 curl -s https://raw.githubusercontent.com/minhng92/odoo-20-docker-compose/master/run.sh \
-  | bash -s odoo-one 10020 20020
+  | bash -s -- --destination odoo-one --port 10020 --chat 20020
 ```
 
-To add a second instance on a different port:
+and/or run the following to set up another Odoo instance at `localhost:11020`:
 
 ```bash
 curl -s https://raw.githubusercontent.com/minhng92/odoo-20-docker-compose/master/run.sh \
-  | bash -s odoo-two 11020 21020
+  | bash -s -- --destination odoo-two --port 11020 --chat 21020
 ```
 
-> If `curl` is missing: `sudo apt-get install curl` (Debian/Ubuntu) or `sudo yum install curl` (RHEL/CentOS).
+If `curl` is missing, install it:
+
+```bash
+sudo apt-get install curl     # Debian / Ubuntu
+sudo yum install curl         # RHEL / CentOS
+```
 
 ### Arguments
 
-| # | Example | Meaning |
-|---|---------|---------|
-| 1 | `odoo-one` | Name of the deploy folder where the stack is cloned |
-| 2 | `10020`  | Odoo web port exposed on the host |
-| 3 | `20020`  | Live-chat port exposed on the host |
+| Flag | Required | Example | Meaning |
+|------|:--------:|---------|---------|
+| `--destination` | Yes | `odoo-one` | Name of the deploy folder where the stack is cloned |
+| `--port` | Yes | `10020` | Odoo web port exposed on the host |
+| `--chat` | Yes | `20020` | Live-chat port exposed on the host |
+| `--password` | No | `mymaster` | Odoo master password (**admin_passwd**). Defaults to the value in **etc/odoo.conf** |
+| `--db-password` | No | `dbSecret` | PostgreSQL password (**POSTGRES_PASSWORD**/**PASSWORD**). Defaults to `odoo20@2026` |
+
+### Examples with custom passwords
+
+Custom master password:
+
+```bash
+curl -s https://raw.githubusercontent.com/minhng92/odoo-20-docker-compose/master/run.sh \
+  | bash -s -- --destination odoo-one --port 10020 --chat 20020 --password mymaster
+```
+
+Custom master + database passwords:
+
+```bash
+curl -s https://raw.githubusercontent.com/minhng92/odoo-20-docker-compose/master/run.sh \
+  | bash -s -- --destination odoo-one --port 10020 --chat 20020 \
+    --password mymaster --db-password dbSecret
+```
 
 ## Usage
+
+Start the container:
 
 ```bash
 cd odoo-one
 docker-compose up -d
 ```
 
-Open <http://localhost:10020> to access Odoo 20.
+Then open <http://localhost:10020> to access Odoo 20.
 
 ## Tips & Troubleshooting
 
@@ -55,8 +81,8 @@ Edit **docker-compose.yml** in the parent directory:
 
 ```yaml
 ports:
-  - "11020:8069"
-```
+  - "10020:8069"
+````
 
 ### Run in detached mode
 
@@ -68,7 +94,7 @@ docker-compose up -d
 
 ### Set a restart policy
 
-In **docker-compose.yml**, set the `restart` key on a service:
+In **docker-compose.yml**, set the `restart` key on a service to one of:
 
 - `no` — don't restart
 - `on-failure[:max-retries]` — restart on crash, optionally capped
@@ -100,7 +126,7 @@ Drop your own addons into the **addons/** folder. It's mounted into Odoo as `/mn
 
 - **Configuration:** edit [`etc/odoo.conf`](etc/odoo.conf)
 - **Server log:** `etc/odoo-server.log`
-- **Default admin password:** `admin_passwd = minhng.info` in [`etc/odoo.conf`](etc/odoo.conf)
+- **Default admin password:** `admin_passwd = minhng.info` in [`etc/odoo.conf`](etc/odoo.conf) — override at setup time with `--password`
 
 ## Container Management
 
@@ -126,10 +152,10 @@ server {
 
 ## Versions
 
-| Service     | Image           |
-|-------------|-----------------|
-| Odoo        | `odoo:20`       |
-| PostgreSQL  | `postgres:18`   |
+| Service     | Image        |
+|-------------|--------------|
+| Odoo        | `odoo:20`    |
+| PostgreSQL  | `postgres:18`|
 
 ## Screenshots
 
@@ -155,11 +181,8 @@ server {
 
 ---
 
-<details>
-<summary>🤗 Support the project</summary>
+## ☕ Buy Me a Coffee
 
 If this saves you time, consider buying me a coffee.
 
-[Buy Me a Coffee](https://buymeacoffee.com/minhng.info)
-
-</details>
+<a href="https://buymeacoffee.com/minhng.info" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
